@@ -1,0 +1,848 @@
+{
+	"info": {
+		"_postman_id": "52da0c9e-85d9-4096-854c-c3067dd91418",
+		"name": "KeyCloak Account And Auth Services",
+		"description": "Auth 2.0, Account Service and Test Resource Services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth Account Service",
+			"item": [
+				{
+					"name": "Create New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"tahirsaleem\",\n  \"dateOfBirth\": \"10-01-1986\",\n  \"gender\": 1,\n  \"password\": \"12345678\",\n  \"email\": \"tahirghoori@gmail.com\",\n  \"roles\": [\n    \"ADMIN\"\n  ]\n}\n\n    "
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/register",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token / User  Login ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e6ab653d-0ba5-4990-a137-50e7815f8306",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.environment.set(\"token_bearer\",data.access_token);",
+									"pm.environment.set(\"refresh_token\",data.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"tahirghoori@gmail.com\",\n\t\"password\":\"87654321\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Refresh",
+								"value": "{{refresh_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/refresh",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Whoami  / get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJIVFlqZ1pyaFFQbmNpNzlvdVNOSFd5QTBNdnZFZ093M2tlQXd0UkxOWU5RIn0.eyJqdGkiOiJlZTYyZGI4NC0yN2E4LTRlNTItYjZjNC1jMWMxM2Y5MzlkMzkiLCJleHAiOjE1NTMxOTIyNDUsIm5iZiI6MCwiaWF0IjoxNTUzMTkxOTQ1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXV0aC9yZWFsbXMvcmFzLWFwcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2NTAzMzJjMi00NWI2LTQ4NGUtYTc0OC1iYmNiNWQyNDY5YzEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJjbGllbnQtYWRtaW4tYWNjb3VudCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjNmMzdhOTBhLTMzY2ItNDcwNi05N2Q3LWE1YTdjMTA3YTZlYSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGFsaGEiLCJlbWFpbCI6InRhbGhhQGdtYWlsLmNvbSJ9.IdvmJIIUKthnYwKuwCvPLGHz1mMgmWBFWd1lLgyCQ66J90QILeNvSrWZvAlvAcFg4Jx1gDHkUnZ5E6g7s-5l85FFkrBmhSFNSMKEa7q_zTgOEJRpOtXu87K-jg6gIkKVBiJEYSMhwqRzMyDnlDf3KXKxEeC2XM7PqyguojfJ3xv7FNpFePBf7qDkS_RWK1MKFQRhvkwvUXjzrmwt8JTQdvV1uex93bfoXhad8bJXPK7vlZsexAG497YWuCIurhVL37TknSa_2uCsS4nkCITodEQqJXahcInSZJersibfw3Bu1J-f67TzDXzk1nCB4j4TIrWCKJqEyBm9R_NjXssGNw",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/whoami",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"whoami"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"tahirghoori@gmail.com\",\n  \"fullName\": \"87654321\",\n  \"dateOfBirth\": \"222222\",\n  \"gender\": 2\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/updateProfile",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"tahirghoori@gmail.com\",\n  \"password\": \"87654321\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/updatePassword",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"updatePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"tahirghoori@gmail.com\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/forgotPassword",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Logout All Session",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJIVFlqZ1pyaFFQbmNpNzlvdVNOSFd5QTBNdnZFZ093M2tlQXd0UkxOWU5RIn0.eyJqdGkiOiJlZTYyZGI4NC0yN2E4LTRlNTItYjZjNC1jMWMxM2Y5MzlkMzkiLCJleHAiOjE1NTMxOTIyNDUsIm5iZiI6MCwiaWF0IjoxNTUzMTkxOTQ1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXV0aC9yZWFsbXMvcmFzLWFwcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2NTAzMzJjMi00NWI2LTQ4NGUtYTc0OC1iYmNiNWQyNDY5YzEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJjbGllbnQtYWRtaW4tYWNjb3VudCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjNmMzdhOTBhLTMzY2ItNDcwNi05N2Q3LWE1YTdjMTA3YTZlYSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGFsaGEiLCJlbWFpbCI6InRhbGhhQGdtYWlsLmNvbSJ9.IdvmJIIUKthnYwKuwCvPLGHz1mMgmWBFWd1lLgyCQ66J90QILeNvSrWZvAlvAcFg4Jx1gDHkUnZ5E6g7s-5l85FFkrBmhSFNSMKEa7q_zTgOEJRpOtXu87K-jg6gIkKVBiJEYSMhwqRzMyDnlDf3KXKxEeC2XM7PqyguojfJ3xv7FNpFePBf7qDkS_RWK1MKFQRhvkwvUXjzrmwt8JTQdvV1uex93bfoXhad8bJXPK7vlZsexAG497YWuCIurhVL37TknSa_2uCsS4nkCITodEQqJXahcInSZJersibfw3Bu1J-f67TzDXzk1nCB4j4TIrWCKJqEyBm9R_NjXssGNw",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8084/keycloak/logout",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8084",
+							"path": [
+								"keycloak",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth Resource Service Test Case",
+			"item": []
+		},
+		{
+			"name": "Auth User Mangment Service",
+			"item": []
+		},
+		{
+			"name": "KeyCloak Direct Actions",
+			"item": [
+				{
+					"name": "GetToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a87bc618-0580-40ec-9efc-24c143afd53d",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"pm.environment.set(\"token_bearer\",data.access_token);",
+									"pm.environment.set(\"refresh_token\",data.refresh_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "my-app",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{keycloak_server_url}}/auth/realms/{{realm}}/protocol/openid-connect/token",
+							"host": [
+								"{{keycloak_server_url}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"{{realm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						},
+						"description": "Get Auth Token / User login"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token_bearer}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"Witekio\",\n\t\"enabled\": false,\n\t\"emailVerified\": false,\n\t\"firstName\": \"Witek\",\n\t\"lastName\": \"io\",\n\t\"email\": \"contact@witekio.com\",\n\t\"realmRoles\": [\"partner\"]\n}"
+						},
+						"url": {
+							"raw": "{{keycloak_server_url}}/auth/admin/realms/{{realm}}/users",
+							"host": [
+								"{{keycloak_server_url}}"
+							],
+							"path": [
+								"auth",
+								"admin",
+								"realms",
+								"{{realm}}",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJtMHl5aUdRc0w4THRURmhoTFBTaFNEeUM4WkM1dUVObXRKanZSVHpUVnNrIn0.eyJqdGkiOiI4N2Q4ZjExOC03MDA3LTQ0ODUtYTY0Yi1hZDkyN2EwYzZjZTkiLCJleHAiOjE0OTc0Mjc4MjMsIm5iZiI6MCwiaWF0IjoxNDk3NDI2MDIzLCJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6InNlcnZpY2UiLCJzdWIiOiJjYzJiODFkMi1lNDUwLTQ2ZmEtOGNmOC05ODY1NGRlM2ZkNTciLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoic2VydmljZSIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjRjN2Q3OTQ4LTQxZjYtNGUwZC1hNzk2LTk3ZjAwMTRiYzk2ZSIsImNsaWVudF9zZXNzaW9uIjoiOTFmMWMzYWEtMGVkMi00M2RkLTk5ZmUtZGVhYmU1Y2NhNzI2IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbInVtYV9hdXRob3JpemF0aW9uIiwidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX19.k-mmJ2xYf62kQ3d9eKOZySN-NzIua_Xyxe7K9ri8Pi4nxAfjEG-OBstauuHvv4PWWmqA_rbpJgiwXBp3tWNrNWowv9twAINS40l8ItCQtd_JOIG9czWUJkt0LCpwgbhOtwiwnLjd0DBw2iqMd_scbajWVKxiFN8vWh45ViP6YfBN8RwQ2ZMqmcGS2pxDDRnabHl3XH_XwnRCn_yDZa12eDDP9CjHHyMeKpBIB9iPT33wj0YrYOtcJ1zuMvQdyhmYkghyeXDgwmVhbvSDttO6DWmV9v3hAmk8QPeLNUxMBlPJJeJQMdilzaby2elxPiy1jpXdePc0X4nTzY8-Qoua5w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5555/keycloak/refreshtoken",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5555",
+							"path": [
+								"keycloak",
+								"refreshtoken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJtMHl5aUdRc0w4THRURmhoTFBTaFNEeUM4WkM1dUVObXRKanZSVHpUVnNrIn0.eyJqdGkiOiI4N2Q4ZjExOC03MDA3LTQ0ODUtYTY0Yi1hZDkyN2EwYzZjZTkiLCJleHAiOjE0OTc0Mjc4MjMsIm5iZiI6MCwiaWF0IjoxNDk3NDI2MDIzLCJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6InNlcnZpY2UiLCJzdWIiOiJjYzJiODFkMi1lNDUwLTQ2ZmEtOGNmOC05ODY1NGRlM2ZkNTciLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoic2VydmljZSIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjRjN2Q3OTQ4LTQxZjYtNGUwZC1hNzk2LTk3ZjAwMTRiYzk2ZSIsImNsaWVudF9zZXNzaW9uIjoiOTFmMWMzYWEtMGVkMi00M2RkLTk5ZmUtZGVhYmU1Y2NhNzI2IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbInVtYV9hdXRob3JpemF0aW9uIiwidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX19.k-mmJ2xYf62kQ3d9eKOZySN-NzIua_Xyxe7K9ri8Pi4nxAfjEG-OBstauuHvv4PWWmqA_rbpJgiwXBp3tWNrNWowv9twAINS40l8ItCQtd_JOIG9czWUJkt0LCpwgbhOtwiwnLjd0DBw2iqMd_scbajWVKxiFN8vWh45ViP6YfBN8RwQ2ZMqmcGS2pxDDRnabHl3XH_XwnRCn_yDZa12eDDP9CjHHyMeKpBIB9iPT33wj0YrYOtcJ1zuMvQdyhmYkghyeXDgwmVhbvSDttO6DWmV9v3hAmk8QPeLNUxMBlPJJeJQMdilzaby2elxPiy1jpXdePc0X4nTzY8-Qoua5w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5555/keycloak/refreshtoken",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5555",
+							"path": [
+								"keycloak",
+								"refreshtoken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password Page",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJtMHl5aUdRc0w4THRURmhoTFBTaFNEeUM4WkM1dUVObXRKanZSVHpUVnNrIn0.eyJqdGkiOiI4N2Q4ZjExOC03MDA3LTQ0ODUtYTY0Yi1hZDkyN2EwYzZjZTkiLCJleHAiOjE0OTc0Mjc4MjMsIm5iZiI6MCwiaWF0IjoxNDk3NDI2MDIzLCJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwODAvYXV0aC9yZWFsbXMvZGVtbyIsImF1ZCI6InNlcnZpY2UiLCJzdWIiOiJjYzJiODFkMi1lNDUwLTQ2ZmEtOGNmOC05ODY1NGRlM2ZkNTciLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoic2VydmljZSIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjRjN2Q3OTQ4LTQxZjYtNGUwZC1hNzk2LTk3ZjAwMTRiYzk2ZSIsImNsaWVudF9zZXNzaW9uIjoiOTFmMWMzYWEtMGVkMi00M2RkLTk5ZmUtZGVhYmU1Y2NhNzI2IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbInVtYV9hdXRob3JpemF0aW9uIiwidXNlciJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX19.k-mmJ2xYf62kQ3d9eKOZySN-NzIua_Xyxe7K9ri8Pi4nxAfjEG-OBstauuHvv4PWWmqA_rbpJgiwXBp3tWNrNWowv9twAINS40l8ItCQtd_JOIG9czWUJkt0LCpwgbhOtwiwnLjd0DBw2iqMd_scbajWVKxiFN8vWh45ViP6YfBN8RwQ2ZMqmcGS2pxDDRnabHl3XH_XwnRCn_yDZa12eDDP9CjHHyMeKpBIB9iPT33wj0YrYOtcJ1zuMvQdyhmYkghyeXDgwmVhbvSDttO6DWmV9v3hAmk8QPeLNUxMBlPJJeJQMdilzaby2elxPiy1jpXdePc0X4nTzY8-Qoua5w",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"rodrigo.sasaki\",\n    \"enabled\": true,\n    \"totp\": false,\n    \"emailVerified\": false,\n    \"firstName\": \"Rodrigo\",\n    \"lastName\": \"Sasaki\",\n    \"email\": \"rodrigo.sasaki at email.com.br\",\n    \"credentials\": [\n        {\n            \"type\": \"password\",\n            \"value\": \"myPassword\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/auth/realms/ras-app/login-actions/reset-credentials?client_id=my_client_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"auth",
+								"realms",
+								"ras-app",
+								"login-actions",
+								"reset-credentials"
+							],
+							"query": [
+								{
+									"key": "session_code",
+									"value": "hkG5chutFLW7IVdNcOXTkAify0Ix41byZuUkqAlNTLQ",
+									"disabled": true
+								},
+								{
+									"key": "execution",
+									"value": "3f76eb96-b048-4339-aed3-e14bd63ca612",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "my_client_id"
+								},
+								{
+									"key": "tab_id",
+									"value": "wnjotihiWCE",
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "rehankhan@gmail.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET List of users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token_bearer}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{keycloak_server_url}}/auth/admin/realms/{{realm}}/users?search={{email}}",
+							"host": [
+								"{{keycloak_server_url}}"
+							],
+							"path": [
+								"auth",
+								"admin",
+								"realms",
+								"{{realm}}",
+								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "{{email}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token_bearer}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{keycloak_server_url}}/auth/admin/realms/{{realm}}/users/{{user_keycloak_id}}",
+							"host": [
+								"{{keycloak_server_url}}"
+							],
+							"path": [
+								"auth",
+								"admin",
+								"realms",
+								"{{realm}}",
+								"users",
+								"{{user_keycloak_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8083/auth/realms/ras-app/protocol/openid-connect/userinfo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"auth",
+								"realms",
+								"ras-app",
+								"protocol",
+								"openid-connect",
+								"userinfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "postman",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8083/auth/realms/ras-app/protocol/openid-connect/logout?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"auth",
+								"realms",
+								"ras-app",
+								"protocol",
+								"openid-connect",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "postman",
+									"disabled": true
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"disabled": true
+								},
+								{
+									"key": "client_secret",
+									"value": "e5f04be8-2d6a-44d2-aec6-3512fc7b541f",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a31b76b4-8136-4a5b-ad2d-3d7c96d68302",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5414bf53-f1f4-4dfe-bdde-60a1a9601fec",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "28e9bf55-0553-4b60-99ca-88c7fc576bca",
+			"key": "keycloak_server_url",
+			"value": "http://localhost:8083",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "fa9df62b-d25a-48b8-8ba9-fe4c8eefaaff",
+			"key": "realm",
+			"value": "ras-app",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "f4dbaae5-78ae-4f10-b843-93d70001957a",
+			"key": "password",
+			"value": "12345678",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "4e241b56-5212-4bb4-8f8a-6c37dbb7bf24",
+			"key": "refresh_token",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "b2f403eb-3f2f-45c6-99d3-5f2c3542e735",
+			"key": "email",
+			"value": "talha@gmail.com",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "7c8018d5-b009-44de-a432-8823764b837c",
+			"key": "token_bearer",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJIVFlqZ1pyaFFQbmNpNzlvdVNOSFd5QTBNdnZFZ093M2tlQXd0UkxOWU5RIn0.eyJqdGkiOiJjZDJjZDdiNS0yYWJiLTRlYTYtOGU1MS0xOTUzZmY0N2VhNTgiLCJleHAiOjE1NTM1MjYyMDgsIm5iZiI6MCwiaWF0IjoxNTUzNTI1OTA4LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXV0aC9yZWFsbXMvcmFzLWFwcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2NTAzMzJjMi00NWI2LTQ4NGUtYTc0OC1iYmNiNWQyNDY5YzEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJjbGllbnQtYWRtaW4tYWNjb3VudCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjgwOTU1ODVmLWYxYTgtNGU0My1iNDVhLWU5MmVlMDE1YzJlYiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGFsaGEiLCJlbWFpbCI6InRhbGhhQGdtYWlsLmNvbSJ9.AmgX6myWtfGdtd1Lo-uSwiSXgzouCOJOLHaPbH7LO1URQPMwsmD9p1JMoXlr-sLRSd5ky3g4V5lxuwEo41vYM6BHkoauv3EZDQaWnzVtjqyyxHyGjuZInp7jVjppQbCx_xJ-h5RvbZy0LHWFgxX_tVAV_lTianla7ZdQXKTYVftZQIurFbkhkxPZJXhiv4z7qXmrEWoO5rG-1slgEtBrcxNZnYs89twFgzgBHufMPdEXdhsFjfELgY8MvInHuyeTRyqi3IFlrdG7_feiXSgjPXyLSjWCUFy2aoNg-0Oe-8xxX-fWXXEPFJuPVsp3aaho5491kTdZdiCV3-4FzKj-Ag.eyJqdGkiOiIwNTdmODA2Yi1kZDVhLTQyMjItYmRkMC03ZTA5YzIyYWQ4MzMiLCJleHAiOjE1NTM1MjU1OTUsIm5iZiI6MCwiaWF0IjoxNTUzNTI1Mjk1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODMvYXV0aC9yZWFsbXMvcmFzLWFwcCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2NTAzMzJjMi00NWI2LTQ4NGUtYTc0OC1iYmNiNWQyNDY5YzEiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJjbGllbnQtYWRtaW4tYWNjb3VudCIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjAwZTk4ZmJjLTQ1NDAtNGJlNi05ZjAwLWJkZDg3NWJlYWU1YSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGFsaGEiLCJlbWFpbCI6InRhbGhhQGdtYWlsLmNvbSJ9.fzQgUX5mhq1bsPwBODEIcfooB5dY9S9KisVHigMxmH2aKQQE0mEsRITHYRLuRKdv-5I1eVr-_s65hpZobzsRJk93KUai0qXKuZzWgAij-A8d0-es1KgLY2nj8XPOnFrn-3EMf5hKw3Jw7kVkLLXgq_bnisk85PwEKFgrVDJuynvjrxWSiXad-1ogvCUiUI0fJDOo-LlcnuSmCqCMJL94NHWcR2AbfiCwgNt3utfmR9NWE9gr7q3kvhdjdEIGo6VZyPFGX7Gp7KvPPEZlVcHJiklevW4OrARmIs2cFz4s-2oTBMZfuE_Cub-YF8apsMghhh_IeRhQwawCTNlGoIfctw",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"id": "868f6a23-334f-459f-950c-71825e4388b7",
+			"key": "keycloak_account_server_url",
+			"value": "http://localhost:8083",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.3.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.keycloak</groupId>
+    <artifactId>accountservice</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>accountservice</name>
+    <description>Keycloak Account Service for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <keycloak.version>4.8.0.Final</keycloak.version>
+    </properties>
+
+
+    <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-web</artifactId>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--</dependency>-->
+
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-starter</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-common</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>3.1.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.1.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>3.1.4.Final</version>
+        </dependency>
+
+
+
+        <!--<dependency>-->
+            <!--<groupId>javax.ws.rs</groupId>-->
+            <!--<artifactId>javax.ws.rs-api</artifactId>-->
+            <!--<version>2.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.googlecode.json-simple</groupId>-->
+            <!--<artifactId>json-simple</artifactId>-->
+        <!--</dependency>-->
+
+
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <!--<dependencies>-->
+
+
+
+
+
+    <!--<dependency>-->
+    <!--<groupId>javax.ws.rs</groupId>-->
+    <!--<artifactId>javax.ws.rs-api</artifactId>-->
+    <!--<version>2.0</version>-->
+    <!--</dependency>-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>com.googlecode.json-simple</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>json-simple</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>keycloak-core</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>keycloak-common</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>keycloak-admin-client</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>resteasy-client</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>resteasy-jaxrs</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<artifactId>resteasy-jackson2-provider</artifactId>&ndash;&gt;-->
+    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
+    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-test</artifactId>-->
+    <!--<scope>test</scope>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.security</groupId>-->
+    <!--<artifactId>spring-security-test</artifactId>-->
+    <!--<scope>test</scope>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+
+    <!--<dependencyManagement>-->
+    <!--<dependencies>-->
+    <!--<dependency>-->
+    <!--<groupId>org.keycloak.bom</groupId>-->
+    <!--<artifactId>keycloak-adapter-bom</artifactId>-->
+    <!--<version>${keycloak.version}</version>-->
+    <!--<type>pom</type>-->
+    <!--<scope>import</scope>-->
+    <!--</dependency>-->
+    <!--</dependencies>-->
+    <!--</dependencyManagement>-->
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
