@@ -55,6 +55,8 @@ public interface KeycloakService {
 
     public void logoutUser(String userId);
 
+    public void  singleSessionLogout(String token,String refresh_token);
+
     public List<UserProfile> getUsersWithRole(String realmAdminCreds, String tenantId, String roleName);
 
     public List<UserProfile> findUser(String realmAdminCreds, String tenantId, String email, String userName);

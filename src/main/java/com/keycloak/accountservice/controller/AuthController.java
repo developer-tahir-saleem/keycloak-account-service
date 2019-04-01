@@ -12,12 +12,15 @@ import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -133,18 +136,25 @@ public class AuthController {
 
 
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<?> logoutUser(final Principal principal) {
-
+    @RequestMapping(value = "/logoutAll", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> logoutAllSessions(final Principal principal) {
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) principal;
         KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
         AccessToken accessToken = session.getToken();
         KeycloakService.logoutUser(accessToken.getSubject());
-        return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out successfully!", true), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out All Sessions successfully!", true), HttpStatus.OK);
     }
 
-//
+    @GetMapping(path = "/logout")
+    public ResponseEntity<?> logout(HttpServletRequest req, @RequestParam(value = "refresh_token") String refresh_token) throws ServletException {
+            final HttpServletRequest request = (HttpServletRequest) req;
+            final String authHeader = request.getHeader("authorization");
+            KeycloakService.singleSessionLogout(authHeader,refresh_token);
+        return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out successfully!", true), HttpStatus.OK);
+
+    }
+
     @PostMapping(path = "updateProfile", produces = "application/json")
     public ResponseChangeStatus updateAccount(final Principal principal, @RequestBody @Valid RequestUpdateAccount account) {
 

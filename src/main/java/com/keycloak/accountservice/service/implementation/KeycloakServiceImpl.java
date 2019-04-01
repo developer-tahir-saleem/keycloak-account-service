@@ -9,13 +9,18 @@ import com.keycloak.accountservice.request.UserCredentials;
 import com.keycloak.accountservice.response.ResponseRegister;
 import com.keycloak.accountservice.service.KeycloakService;
 import com.keycloak.accountservice.service.UserService;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RoleResource;
@@ -34,7 +39,12 @@ import sun.plugin.util.UserProfile;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.sql.RowId;
 import java.util.*;
 
 @Service("keycloakService")
@@ -98,6 +108,21 @@ public class KeycloakServiceImpl implements KeycloakService {
         return result.toString();
 
     }
+
+    private String sendPostLogout(List<NameValuePair> urlParameters) throws Exception {
+
+        HttpClient client = HttpClientBuilder.create().build();
+//        http://localhost:8083/auth/realms/ras-app/protocol/openid-connect/logout
+        HttpPost post = new HttpPost(AUTHURL + "/realms/" + REALM + "/protocol/openid-connect/logout");
+
+        post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(post);
+
+        return response.toString();
+
+    }
+
 
 
     @Override
@@ -226,7 +251,6 @@ public class KeycloakServiceImpl implements KeycloakService {
 //            e.printStackTrace();
 //
 //        }
-
 
 
         return ResponseEntity.status(statusId).body(responseRegister);
@@ -536,6 +560,77 @@ public class KeycloakServiceImpl implements KeycloakService {
     public void logoutUser(String userId) {
         UsersResource userRessource = getRealmResource().users();
         userRessource.get(userId).logout();
+    }
+
+    @Override
+    public void singleSessionLogout(String token, String refresh_token) {
+
+
+        String responseToken = null;
+        try {
+
+
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            urlParameters.add(new BasicNameValuePair("grant_type", "refresh_token"));
+            urlParameters.add(new BasicNameValuePair("client_id", CLIENTID));
+            urlParameters.add(new BasicNameValuePair("refresh_token", refresh_token));
+            urlParameters.add(new BasicNameValuePair("client_secret", SECRETKEY));
+
+            responseToken = sendPostLogout(urlParameters);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("executing Response: " + responseToken);
+
+
+//
+//        String url = "http://localhost:8083/auth/realms/ras-app/protocol/openid-connect/logout";
+//        CloseableHttpClient client = HttpClientBuilder.create().build();
+//
+//        HttpPost httpPost = new HttpPost(url);
+////        httpPost.setHeader(HttpHeaders.AUTHORIZATION, token);
+//
+//        httpPost.setHeader("content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//        try {
+//            //we had to the parameters to the post request
+//            JSONObject json = new JSONObject();
+//
+//            json.put("grant_type", "refresh_token");
+//            json.put("client_id", CLIENTID);
+//            json.put("client_secret", SECRETKEY);
+//            json.put("refresh_token", refresh_token);
+//
+//
+//
+//
+//            //create the user json object
+////            JSONObject userObj = new JSONObject();
+////            userObj.put("email", "johnsmith42@yopmail.com");
+////            userObj.put("name", "Anna Sax");
+////
+////            JSONArray childrenArray = new JSONArray();
+////
+////            JSONObject child1 = new JSONObject();
+////            child1.put("name", "Iphone 6");
+////            child1.put("age", "2");
+////            childrenArray.add(child1);
+////            userObj.put("children", childrenArray);
+////            json.put("user", childObj);
+//
+//            StringEntity params = new StringEntity(json.toString());
+//            httpPost.setEntity(params);
+//
+//            System.out.println("executing request: " + httpPost.getRequestLine());
+//            HttpResponse response;
+//            response = client.execute(httpPost);
+//            System.out.println("executing Response: " + response);
+//
+//        }catch (Exception e){
+//
+//        }
     }
 
     @Override
