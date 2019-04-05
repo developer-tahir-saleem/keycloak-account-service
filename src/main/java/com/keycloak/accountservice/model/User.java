@@ -40,6 +40,9 @@ public class User extends BaseModel {
     @Transient
     private String password;
 
+
+
+
 //    private String type;
 
 //    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

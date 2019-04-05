@@ -1,9 +1,11 @@
 package com.keycloak.accountservice.controller;
 
 
+import com.keycloak.accountservice.model.Device;
 import com.keycloak.accountservice.model.User;
 import com.keycloak.accountservice.request.*;
 import com.keycloak.accountservice.response.*;
+import com.keycloak.accountservice.service.DeviceService;
 import com.keycloak.accountservice.service.KeycloakService;
 import com.keycloak.accountservice.service.UserService;
 import org.keycloak.KeycloakPrincipal;
@@ -12,7 +14,6 @@ import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -33,6 +34,10 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DeviceService deviceService;
+
 
     private final KeycloakService KeycloakService;
 
@@ -69,18 +74,13 @@ public class AuthController {
 
     @RequestMapping(value = "/refresh", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getRefreshToken(@RequestHeader(value = "Refresh") String refreshToken) {
-
         String responseToken = null;
         try {
             responseToken = KeycloakService.getByRefreshToken(refreshToken);
-
-//            responseToken = KeyclockService.getByRefreshToken(refreshToken);
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(responseToken, HttpStatus.OK);
     }
 
@@ -90,20 +90,25 @@ public class AuthController {
      */
 
     @RequestMapping(value = "/token", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity getTokenUsingCredentials(@RequestBody UserCredentials userCredentials) {
+    public ResponseEntity getTokenUsingCredentials(@Valid @RequestBody UserCredentials userCredentials) {
+
+//        This is for Mobile Notification Device Register
+        Device device = userCredentials.getDevice();
+        if (device.getDeviceToken() != "") {
+            User user = userService.findByEmail(userCredentials.getEmail());
+            device.setUserId(user.getId().toString());
+            device.setLoggedin(true);
+            deviceService.insertOrUpdate(device);
+        }
+//        This is for Mobile Notification Device Register
 
         String responseToken = null;
         try {
-
             responseToken = KeycloakService.getToken(userCredentials);
-
         } catch (Exception e) {
-
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-
         return ResponseEntity.status(HttpStatus.OK).body(responseToken);
-
     }
 
 
@@ -117,7 +122,6 @@ public class AuthController {
 
     @PostMapping(path = "/updatePassword", produces = "application/json")
     public ResponseChangePassword changePassword(final Principal principal, @RequestBody @Valid RequestChangePassword requestChangePassword) {
-
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) principal;
         KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
@@ -129,11 +133,9 @@ public class AuthController {
 
     @PostMapping(path = "/remove/user", produces = "application/json")
     public ResponseRemoveAccount changePassword(@RequestBody @Valid RequestRemoveAccount requestRemoveAccount) {
-
         KeycloakService.removeUser(requestRemoveAccount.getId());
         return new ResponseRemoveAccount(" Hi!, user has been successfully deleted! ", true);
     }
-
 
 
     @RequestMapping(value = "/logoutAll", method = RequestMethod.GET, produces = "application/json")
@@ -147,17 +149,34 @@ public class AuthController {
     }
 
     @GetMapping(path = "/logout")
-    public ResponseEntity<?> logout(HttpServletRequest req, @RequestParam(value = "refresh_token") String refresh_token) throws ServletException {
-            final HttpServletRequest request = (HttpServletRequest) req;
-            final String authHeader = request.getHeader("authorization");
-            KeycloakService.singleSessionLogout(authHeader,refresh_token);
-        return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out successfully!", true), HttpStatus.OK);
+    public ResponseEntity<?> logout(HttpServletRequest req, @RequestParam(value = "refresh_token") String refresh_token, @RequestParam(value = "hardware_id") String  hardware_id) throws ServletException {
+        final HttpServletRequest request = (HttpServletRequest) req;
+        Principal principal = request.getUserPrincipal();
+        KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) principal;
+        KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
+        KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
+        AccessToken accessToken = session.getToken();
 
+
+        //        This is for Mobile Notification Device Register
+
+
+        User user = userService.findByAuthId(accessToken.getSubject());
+        Device device = new Device();
+        device.setUserId(user.getId().toString());
+        device.setLoggedin(false);
+        device.setHardwareId(hardware_id);
+        deviceService.insertOrUpdate(device);
+
+//        This is for Mobile Notification Device Register
+
+        final String authHeader = request.getHeader("authorization");
+        KeycloakService.singleSessionLogout(authHeader, refresh_token);
+        return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out successfully!", true), HttpStatus.OK);
     }
 
     @PostMapping(path = "updateProfile", produces = "application/json")
     public ResponseChangeStatus updateAccount(final Principal principal, @RequestBody @Valid RequestUpdateAccount account) {
-
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) principal;
         KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
@@ -165,36 +184,8 @@ public class AuthController {
         User user = userService.findByAuthId(accessToken.getSubject());
         BeanUtils.copyProperties(account, user);
         userService.save(user);
-        return new ResponseChangeStatus( " Update Status Successfully ! @" + user.getEmail(), true);
-
+        return new ResponseChangeStatus(" Update Status Successfully ! @" + user.getEmail(), true);
     }
-//
-//    @PostMapping(path = "setaccountnonexpired", produces = "application/json")
-//    public ResponseChangeStatus setAccountNonExpired(@RequestBody @Valid RequestChangeStatus status) {
-//        User user = accountService.setAccountNonExpired(status);
-//        return new ResponseChangeStatus(user.getType() + " Update Status Successfully ! @" + user.getUsername(), status.isStatus());
-//    }
-//
-//
-//    @PostMapping(path = "setaccountnonlocked", produces = "application/json")
-//    public ResponseChangeStatus setAccountNonLocked(@RequestBody @Valid RequestChangeStatus status) {
-//        User user = accountService.setAccountNonLocked(status);
-//        return new ResponseChangeStatus(user.getType() + " Update Status Successfully ! @" + user.getUsername(), status.isStatus());
-//    }
-//
-//    @PostMapping(path = "setenabled", produces = "application/json")
-//    public ResponseChangeStatus setEnabled(@RequestBody @Valid RequestChangeStatus status) {
-//        User user = accountService.setEnabled(status);
-//        return new ResponseChangeStatus(user.getType() + " Update Status Successfully ! @" + user.getUsername(), status.isStatus());
-//    }
-//
-//    @PostMapping(path = "setcredentialsnonexpired", produces = "application/json")
-//    public ResponseChangeStatus setCredentialsNonExpired(@RequestBody @Valid RequestChangeStatus status) {
-//        User user = accountService.setCredentialsNonExpired(status);
-//        return new ResponseChangeStatus(user.getType() + " Update Status Successfully ! @" + user.getUsername(), status.isStatus());
-//    }
-//
-//
 //    //    @PreAuthorize("hasRole('ADMIN')")
 //    @DeleteMapping(path = "removeaccount", produces = "application/json")
 //    public ResponseRemoveAccount removeAccount(@RequestParam(value = "email") String email) {

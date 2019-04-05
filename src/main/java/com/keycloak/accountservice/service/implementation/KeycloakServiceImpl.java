@@ -394,8 +394,8 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public String getToken(UserCredentials userCredentials) {
         String responseToken = null;
-        try {
 
+        try {
             String username = userCredentials.getEmail();
 
             List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
