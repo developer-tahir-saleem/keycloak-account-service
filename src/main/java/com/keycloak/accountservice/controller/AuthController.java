@@ -61,14 +61,17 @@ public class AuthController {
     }
 
     @GetMapping(path = "/whoami", produces = "application/json")
-    public User me(User user, final Principal principal) {
+    public AccessToken me(User user, final Principal principal) {
         KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) principal;
         KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
         AccessToken accessToken = session.getToken();
-        User appUser = userService.findByAuthId(accessToken.getSubject());
-        BeanUtils.copyProperties(appUser, user);
-        return user;
+
+        accessToken.setScope("test taddkasd tesasd ");
+        return accessToken;
+//        User appUser = userService.findByAuthId(accessToken.getSubject());
+//        BeanUtils.copyProperties(appUser, user);
+//        return user;
     }
 
 
@@ -144,6 +147,11 @@ public class AuthController {
         KeycloakPrincipal kcprincipal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = kcprincipal.getKeycloakSecurityContext();
         AccessToken accessToken = session.getToken();
+        User user = userService.findByAuthId(accessToken.getSubject());
+        //        This is for Mobile Notification Device Register
+        deviceService.logoutAnyWhere(user.getId().toString());
+//        This is for Mobile Notification Device Register
+
         KeycloakService.logoutUser(accessToken.getSubject());
         return new ResponseEntity<>(new ResponseUser("Hi!, you have logged out All Sessions successfully!", true), HttpStatus.OK);
     }

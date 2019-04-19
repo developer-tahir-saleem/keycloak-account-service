@@ -22,10 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.RoleResource;
-import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.admin.client.resource.*;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -176,6 +173,8 @@ public class KeycloakServiceImpl implements KeycloakService {
 
                 responseRegister.setMessage("" + userDTO.getEmail() + " created successfully");
                 System.out.println("User created with userId:" + userId);
+
+//                addRoleToUser(userId,"admin");
 
                 System.out.println("Username==" + userDTO.getEmail() + " created in keycloak successfully");
 
@@ -484,13 +483,14 @@ public class KeycloakServiceImpl implements KeycloakService {
         try {
 
             UserResource retrievedUser = userResource.get(userId);
-
+            ClientsResource clientResource = getRealmResource().clients();
+            RoleResource roleResource = clientResource.get(CLIENTID).roles().get(roleName);
             // Add user to the role
-            RoleResource roleResource = getRealmResource().roles().get(roleName);
-            retrievedUser.roles().realmLevel().add(Arrays.asList(roleResource.toRepresentation()));
+//            RoleResource roleResource = getRealmResource().roles().get(c);
+//            retrievedUser.roles().clientLevel(roleResource.getClientRoleComposites());
+            //.realmLevel().add(Arrays.asList(roleResource.toRepresentation()));
             return true;
         } catch (Exception ex) {
-
             throw new ResourceNotFoundException("Error getting values from property file, reason:",
                     ex.getMessage(),
                     ex.getCause());

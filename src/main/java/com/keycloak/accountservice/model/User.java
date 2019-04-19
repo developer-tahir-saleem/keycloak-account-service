@@ -1,12 +1,14 @@
 package com.keycloak.accountservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,12 +38,20 @@ public class User extends BaseModel {
     private String email;
 
 
+
     @Size(min = 8, max = 64, message = "Minimum password length: 8 - 64 characters")
     @Transient
+//    @JsonIgnore
+//    @JsonProperty(value = "password")
     private String password;
 
 
-
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_role",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+//    )
+//    private List<Role> userRole = new ArrayList<>();
 
 //    private String type;
 

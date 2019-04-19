@@ -18,6 +18,10 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    public DeviceServiceImpl(DeviceRepository deviceRepository) {
+        this.deviceRepository = deviceRepository;
+    }
+
     @Override
     public Device findOne(long id) {
         return deviceRepository.findById(id).get();
@@ -64,6 +68,11 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public Optional<Device> findByHardwareId(String udid) {
         return deviceRepository.findByHardwareId(udid);
+    }
+
+    @Override
+    public int logoutAnyWhere(String userId) {
+        return   deviceRepository.logoutAnyWhere(userId);
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface DeviceService {
     void delete(long id);
     void insertOrUpdate(Device device);
     Optional<Device> findByHardwareId(String id);
-
+    int logoutAnyWhere(String userId);
 
 }
 

@@ -44,6 +44,8 @@ public class BaseModel implements Serializable {
     @UpdateTimestamp
     protected Date updatedAt;
 
+    protected String name;
+
     @JsonIgnore
     @Column(nullable = false)
     protected boolean deleted;

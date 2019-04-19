@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * Created by tahir on 2/11/19.
  */
-public interface UserRepository extends Repository<User, Long> {
+public interface UserRepository extends Repository<User, String> {
 //    Optional<User> findByUsername(String username);
 
     Collection<User> findAll();

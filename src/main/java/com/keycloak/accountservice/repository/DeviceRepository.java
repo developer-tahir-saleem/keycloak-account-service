@@ -2,8 +2,12 @@ package com.keycloak.accountservice.repository;
 
 import com.keycloak.accountservice.model.Device;
 import com.keycloak.accountservice.model.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -21,6 +25,12 @@ public interface DeviceRepository extends Repository<Device, Long> {
     Optional<Device> findByUserIdAndDeviceToken(String id,String token);
 
     Device save(Device account);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Device d SET d.isLoggedin = false WHERE d.userId = :userId")
+    int logoutAnyWhere(@Param("userId") String userId);
+
 
     void deleteById(Long id);
 }

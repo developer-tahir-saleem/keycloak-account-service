@@ -3,6 +3,7 @@ package com.keycloak.accountservice.model;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 /**
  * Created by tahir on 2/12/19.
@@ -16,10 +17,8 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class Role extends BaseModel {
 
-
-
-    private String name;
-
+    @Lob
+    private String permission;
 
 }
 

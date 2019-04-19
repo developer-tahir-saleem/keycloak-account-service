@@ -126,76 +126,32 @@
             <version>1.4</version>
         </dependency>
 
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <!--<version>3.4.1</version>-->
+            <scope>test</scope>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security.oauth</groupId>-->
+            <!--<artifactId>spring-security-oauth2</artifactId>-->
+            <!--<version>2.3.4.RELEASE</version>-->
+        <!--</dependency>-->
+
+
     </dependencies>
-
-    <!--<dependencies>-->
-
-
-
-
-
-    <!--<dependency>-->
-    <!--<groupId>javax.ws.rs</groupId>-->
-    <!--<artifactId>javax.ws.rs-api</artifactId>-->
-    <!--<version>2.0</version>-->
-    <!--</dependency>-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>com.googlecode.json-simple</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>json-simple</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>keycloak-core</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>keycloak-common</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.keycloak</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>keycloak-admin-client</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>4.0.0.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>resteasy-client</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>resteasy-jaxrs</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.jboss.resteasy</groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>resteasy-jackson2-provider</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>3.1.4.Final</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
-    <!--<dependency>-->
-    <!--<groupId>org.springframework.boot</groupId>-->
-    <!--<artifactId>spring-boot-starter-test</artifactId>-->
-    <!--<scope>test</scope>-->
-    <!--</dependency>-->
-    <!--<dependency>-->
-    <!--<groupId>org.springframework.security</groupId>-->
-    <!--<artifactId>spring-security-test</artifactId>-->
-    <!--<scope>test</scope>-->
-    <!--</dependency>-->
-    <!--</dependencies>-->
-
-    <!--<dependencyManagement>-->
-    <!--<dependencies>-->
-    <!--<dependency>-->
-    <!--<groupId>org.keycloak.bom</groupId>-->
-    <!--<artifactId>keycloak-adapter-bom</artifactId>-->
-    <!--<version>${keycloak.version}</version>-->
-    <!--<type>pom</type>-->
-    <!--<scope>import</scope>-->
-    <!--</dependency>-->
-    <!--</dependencies>-->
-    <!--</dependencyManagement>-->
 
 
     <build>
