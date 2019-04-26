@@ -45,6 +45,22 @@ public interface KeycloakService {
 
     public boolean removeRoleFromUser(String userId, String roleName);
 
+    public boolean addRole(String roleName);
+
+    public boolean updateRole(String roleName);
+
+    public boolean removeRole(String roleName);
+
+    public boolean createPermission(String roleName, String permission);
+
+    public boolean updatePermission(String roleName, String permission);
+
+    public boolean deletePermission(String roleName, String permission);
+
+    public boolean addPermission(String roleName, String permission);
+
+    public boolean removePermission(String roleName, String permission);
+
     public boolean doPasswordUpdate(String userId, String password);
 
     public boolean isEmailVerified(String userId);

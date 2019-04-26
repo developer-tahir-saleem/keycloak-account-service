@@ -7,7 +7,8 @@ import com.keycloak.accountservice.repository.PermissionRepository;
 import com.keycloak.accountservice.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class PermissionServiceImpl implements PermissionService {
     PermissionRepository itemRepo;
     @Override
     public Iterable<Permission> findAll() {
-        return  itemRepo.findAll();
+        return  itemRepo.findAllByParent(null);
     }
 
     @Override
@@ -42,9 +43,9 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission delete(Permission item) {
-        this.findByItem(item);
-        return itemRepo.save(item);
+    public Permission delete(UUID item) {
+      Permission permission =  this.findById(item);
+        return itemRepo.save(permission);
     }
 
     @Override
@@ -52,4 +53,10 @@ public class PermissionServiceImpl implements PermissionService {
         this.findByItem(item);
         return itemRepo.save(item);
     }
+
+    @Override
+    public Page<Permission> findListPage(Pageable pageable) {
+        return itemRepo.findAllByDeleted(pageable, false);
+    }
+
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -96,13 +97,16 @@ public class AuthController {
     public ResponseEntity getTokenUsingCredentials(@Valid @RequestBody UserCredentials userCredentials) {
 
 //        This is for Mobile Notification Device Register
-        Device device = userCredentials.getDevice();
-        if (device.getDeviceToken() != "") {
-            User user = userService.findByEmail(userCredentials.getEmail());
-            device.setUserId(user.getId().toString());
-            device.setLoggedin(true);
-            deviceService.insertOrUpdate(device);
+        if(userCredentials.getDevice()!= null){
+            Device device = userCredentials.getDevice();
+            if (device.getDeviceToken() != "") {
+                User user = userService.findByEmail(userCredentials.getEmail());
+                device.setUserId(user.getId().toString());
+                device.setLoggedin(true);
+                deviceService.insertOrUpdate(device);
+            }
         }
+
 //        This is for Mobile Notification Device Register
 
         String responseToken = null;

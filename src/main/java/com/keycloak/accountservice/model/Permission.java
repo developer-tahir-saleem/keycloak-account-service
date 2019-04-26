@@ -1,12 +1,15 @@
 package com.keycloak.accountservice.model;
 
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by tahir on 2/11/19.
@@ -21,19 +24,14 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class Permission extends BaseModel {
 
-    @NotNull
-    @Column(nullable = false)
-    @NotNull
-    @Size( message = "Name is Required!")
-    private String name;
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
-    protected Permission parent;
-
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    @JsonIdentityReference(alwaysAsId = true)
+    private Permission parent;
     @OneToMany(mappedBy = "parent")
-    protected Set<Permission> children;
+    private Collection<Permission> children;
 
 
 }

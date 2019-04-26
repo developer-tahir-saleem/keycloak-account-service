@@ -4,6 +4,7 @@ import com.keycloak.accountservice.config.EncodeDecode;
 import com.keycloak.accountservice.model.AppConfig;
 import com.keycloak.accountservice.model.Role;
 import com.keycloak.accountservice.service.AppConfigService;
+import com.keycloak.accountservice.service.KeycloakService;
 import com.keycloak.accountservice.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,12 +25,8 @@ public class RoleController {
     @Autowired
     private RoleService service;
 
-    @GetMapping("/{key}")
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<?> findById(@PathVariable("key") String key) {
-        return new ResponseEntity<>(service.findByKey(key), HttpStatus.OK);
-    }
+    @Autowired
+    private KeycloakService keycloakService;
 
     @GetMapping
     Page<Role> getPageable(Pageable pageable) {
@@ -44,10 +41,11 @@ public class RoleController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public Role insert(@Valid @RequestBody Role item) {
+        keycloakService.addRole(item.getName());
         return service.insert(item);
     }
 
-    @GetMapping("/get/{uuid}")
+    @GetMapping("/{uuid}")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public Role findById(@PathVariable("uuid") UUID id) {
@@ -57,13 +55,16 @@ public class RoleController {
     @DeleteMapping("{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public Role delete(@PathVariable UUID id) {
-        return service.delete(id);
+       Role role = service.delete(id);
+        keycloakService.removeRole(role.getName());
+        return  role;
     }
 
     @PutMapping
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     public Role update(@RequestBody Role item) {
+        keycloakService.updateRole(item.getName());
         return service.update(item);
     }
 

@@ -5,7 +5,7 @@
 INSERT INTO `permission` (`id`, `parent_id`, `name`, `description`, `deleted`) VALUES
 -- ======================================== User Module =============================xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx===========
 -- --------------------------------------- Child Permission -----------------------------------
-  (unhex(replace('a21f6182-0d26-11e9-ab14-d663bd000100', '-', '')), '', 'USER', 'USER MODULE', 0),
+  (unhex(replace('a21f6182-0d26-11e9-ab14-d663bd000100', '-', '')), null, 'USER', 'USER MODULE', 0),
  --------------------------------------- Child Permission -----------------------------------
   (unhex(replace('a21f6182-0d26-11e9-ab14-d663bd000101', '-', '')), unhex(replace('a21f6182-0d26-11e9-ab14-d663bd000100', '-', ''))
     , 'CREATE', 'USER MODULE CREATE', 0),
@@ -46,15 +46,15 @@ INSERT INTO `permission` (`id`, `parent_id`, `name`, `description`, `deleted`) V
 
 INSERT INTO `role` (`id`, `name`, `permission`, `deleted`) VALUES
 (unhex(replace('a21f6182-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'USER', false),
-(unhex(replace('a21f642a-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'ADMIN', false),
-(unhex(replace('a21f657e-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'MANAGER', false),
-(unhex(replace('a21f68da-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'SUPPERVISOR', false),
-(unhex(replace('a21f6a7e-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'CLIENT', false),
-(unhex(replace('a21f6bb4-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'WORKER', false),
-(unhex(replace('a21f6f38-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'ANDROID', false),
-(unhex(replace('a21f708c-0d26-11e9-ab14-d663bd873d93','-','')),'USER', 'IMAWEB', false),
-(unhex(replace('25c1eac8-0d27-11e9-ab14-d663bd873d93','-','')),'USER', 'IMADMIN', false),
-(unhex(replace('25c1f036-0d27-11e9-ab14-d663bd873d93','-','')),'USER', 'IOS', false);
+(unhex(replace('a21f642a-0d26-11e9-ab14-d663bd873d93','-','')),'ADMIN', 'ADMIN', false),
+(unhex(replace('a21f657e-0d26-11e9-ab14-d663bd873d93','-','')),'MANAGER', 'MANAGER', false),
+(unhex(replace('a21f68da-0d26-11e9-ab14-d663bd873d93','-','')),'SUPPERVISOR', 'SUPPERVISOR', false),
+(unhex(replace('a21f6a7e-0d26-11e9-ab14-d663bd873d93','-','')),'CLIENT', 'CLIENT', false),
+(unhex(replace('a21f6bb4-0d26-11e9-ab14-d663bd873d93','-','')),'WORKER', 'WORKER', false),
+(unhex(replace('a21f6f38-0d26-11e9-ab14-d663bd873d93','-','')),'ANDROID', 'ANDROID', false),
+(unhex(replace('a21f708c-0d26-11e9-ab14-d663bd873d93','-','')),'IMAWEB', 'IMAWEB', false),
+(unhex(replace('25c1eac8-0d27-11e9-ab14-d663bd873d93','-','')),'IMADMIN', 'IMADMIN', false),
+(unhex(replace('25c1f036-0d27-11e9-ab14-d663bd873d93','-','')),'IOS', 'IOS', false);
 
 
 

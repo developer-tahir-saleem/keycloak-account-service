@@ -23,9 +23,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.*;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -33,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import sun.plugin.util.UserProfile;
+import sun.reflect.generics.scope.Scope;
 
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -72,7 +71,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     public RealmResource getRealmResource() {
-        return keycloak.realm("ras-app");
+        return keycloak.realm(REALM);
     }
 
     private CredentialRepresentation createCredential(String cred) {
@@ -119,7 +118,6 @@ public class KeycloakServiceImpl implements KeycloakService {
         return response.toString();
 
     }
-
 
 
     @Override
@@ -517,6 +515,180 @@ public class KeycloakServiceImpl implements KeycloakService {
         } finally {
             return false;
         }
+    }
+
+    @Override
+    public boolean addRole(String roleName) {
+
+        try {
+            RoleRepresentation roleRepresentation = new RoleRepresentation();
+            roleRepresentation.setName(roleName);
+            roleRepresentation.setId(roleName);
+            roleRepresentation.setComposite(true);
+            getRealmResource().roles().create(roleRepresentation);
+
+
+//           RoleResource preRole =  getRealmResource().roles().get(roleName);
+//
+//            RoleRepresentation rRepresentation = new RoleRepresentation();
+//            rRepresentation.setName("permissions");
+//            rRepresentation.setId("permissions");
+//            getRealmResource().roles().create(rRepresentation);
+//
+//
+//            List<RoleRepresentation> subList  = new ArrayList<RoleRepresentation>();
+//            subList.add(getRealmResource().roles().get("permissions").toRepresentation());
+//            preRole.addComposites(subList);
+
+
+
+
+
+
+//            ClientScopeRepresentation csr = new ClientScopeRepresentation();
+//            csr.setName("tahir-access");
+//            csr.setId("tahir-access");
+//
+//            getRealmResource().clientScopes().create(csr);
+//
+//
+//            List<RoleRepresentation> rrList = new ArrayList<RoleRepresentation>();
+//            rrList.add(getRealmResource().roles().get(roleName).toRepresentation());
+//            ClientScopeResource cliscop  = getRealmResource().clientScopes().get("tahir-access");
+//
+//            cliscop.getScopeMappings()
+//                     .realmLevel().add(rrList);
+
+
+
+
+
+            return true;
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Error getting values from property file, reason:",
+                    ex.getMessage(),
+                    ex.getCause());
+
+        } finally {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateRole(String roleName) {
+        try {
+
+            RoleResource rr = getRealmResource().roles().get(roleName);
+//            ManagementPermissionRepresentation mpr = new ManagementPermissionRepresentation(true);
+//
+//                        rr.setPermissions(mpr);
+//            String name;
+//            String str;
+//            PropertyPermission pp = new PropertyPermission("add", "add");
+
+            RoleRepresentation roleRepresentation = new RoleRepresentation();
+            roleRepresentation.setName(roleName);
+            roleRepresentation.setId(roleName);
+            rr.update(roleRepresentation);
+
+            return true;
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Error getting values from property file, reason:",
+                    ex.getMessage(),
+                    ex.getCause());
+
+        } finally {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean removeRole(String roleName) {
+
+        try {
+            getRealmResource().roles().deleteRole(roleName);
+            return true;
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Error getting values from property file, reason:",
+                    ex.getMessage(),
+                    ex.getCause());
+
+        } finally {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean createPermission(String roleName, String permission) {
+        try {
+
+            String[] permissions = permission.split("\\s+");
+
+
+            for (String row : permissions) {
+                RoleRepresentation rRepresentation = new RoleRepresentation();
+                rRepresentation.setName(row);
+                rRepresentation.setId(row);
+                getRealmResource().roles().create(rRepresentation);
+            }
+            return true;
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Error getting values from property file, reason:",
+                    ex.getMessage(),
+                    ex.getCause());
+
+        } finally {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updatePermission(String roleName, String permission) {
+        try {
+
+            RoleResource preRole =  getRealmResource().roles().get(roleName);
+
+            preRole.getRoleComposites();
+
+//            RoleResource preRole =  getRealmResource().roles().get(roleName);
+
+            String[] permissions = permission.split("\\s+");
+
+            List<RoleRepresentation> subList  = new ArrayList<RoleRepresentation>();
+
+            for (String row : permissions) {
+                RoleRepresentation rRepresentation = new RoleRepresentation();
+                rRepresentation.setName(row);
+                rRepresentation.setId(row);
+                getRealmResource().roles().create(rRepresentation);
+                subList.add(getRealmResource().roles().get(row).toRepresentation());
+
+            }
+            preRole.addComposites(subList);
+            return true;
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Error getting values from property file, reason:",
+                    ex.getMessage(),
+                    ex.getCause());
+
+        } finally {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deletePermission(String roleName, String permission) {
+        return false;
+    }
+
+    @Override
+    public boolean addPermission(String roleName, String permission) {
+        return false;
+    }
+
+    @Override
+    public boolean removePermission(String roleName, String permission) {
+        return false;
     }
 
     @Override

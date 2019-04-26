@@ -21,7 +21,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Iterable<Role> findAll() {
-        return  itemRepo.findAll();
+        return itemRepo.findAll();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findByItem(Role item){
+    public Role findByItem(Role item) {
         return this.findById(item.getId());
     }
 
@@ -47,12 +47,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role insert(Role item) {
-        return itemRepo.save(item);
+        Optional<Role> itemOpt = itemRepo.findByName(item.getName());
+        if (itemOpt.isPresent()) {
+            return itemOpt.get();
+        } else {
+            return itemRepo.save(item);
+        }
     }
 
     @Override
     public Role delete(UUID item) {
-       Role role = this.findById(item);
+        Role role = this.findById(item);
         role.setDeleted(true);
         return itemRepo.save(role);
     }
@@ -65,7 +70,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Page<Role> findListPage(Pageable pageable) {
-        return itemRepo.findAll(pageable);
+        return itemRepo.findAllByDeleted(pageable, false);
     }
 
 }

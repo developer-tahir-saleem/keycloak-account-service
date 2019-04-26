@@ -6,8 +6,8 @@ import com.keycloak.accountservice.model.User;
 import com.keycloak.accountservice.repository.UserRepository;
 import com.keycloak.accountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,9 +44,9 @@ public class UserServiceImpl implements  UserService {
     }
 
 
-    private List<SimpleGrantedAuthority> getAuthority() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-    }
+//    private List<SimpleGrantedAuthority> getAuthority() {
+//        return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//    }
 
     public List<User> findAll() {
         List<User> list = new ArrayList<>();

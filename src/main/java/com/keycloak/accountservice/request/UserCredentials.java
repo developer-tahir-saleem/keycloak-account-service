@@ -21,4 +21,5 @@ public class UserCredentials {
 
 	private Device device;
 
+
 }
